@@ -1,4 +1,18 @@
-(U) Untracked = file yang belum pernah dimasukkan kedalam Git {File Baru}
-(M) Modified = file yang udah masuk ke database Git dan udah pernah dimodifikasi 
-(D) Deleted = file yang di hapus 
-(A) Added = file yang ditambahkan ke dalam mode staged
+# Snakes Games
+
+Game ular sederhana pakai HTML, CSS, dan JavaScript.
+
+## Kontrol
+- `Arrow` : gerak
+- `A` : perlambat
+- `D` : percepat
+- `Space` : ulangi game
+
+## Cara menjalankan
+1. Buka file `snakes.html` di browser.
+2. Mainkan.
+
+## File utama
+- `snakes.html`
+- `snakes.css`
+- `snakes.js`
