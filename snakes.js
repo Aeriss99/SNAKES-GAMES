@@ -2,6 +2,8 @@ const gameBoard = document.querySelector("#gameBoard");
 const ctx = gameBoard.getContext("2d");
 const scoreText = document.querySelector("#scoreText");
 const resetBtn = document.querySelector("#resetBtn");
+const slowBtn = document.querySelector("#slowBtn");
+const speedBtn = document.querySelector("#speedBtn");
 const gameWidth = gameBoard.width;
 const gameHeight = gameBoard.height;
 const boardBackground = "white";
@@ -9,22 +11,25 @@ const snakeColor = "lightgreen";
 const snakeBorder = "black";
 const foodColor = "red";
 const unitSize = 25;
+const minTickDelay = 35;
+const maxTickDelay = 220;
+const tickStep = 15;
 let running = false;
 let xVelocity = unitSize;
 let yVelocity = 0;
 let foodX;
 let foodY;
 let score = 0;
+let tickDelay = 75;
 let snake = [
-    {x:unitSize * 4, y:0},
-    {x:unitSize * 3, y:0},
-    {x:unitSize * 2, y:0},
     {x:unitSize, y:0},
     {x:0, y:0}
 ];
 
 window.addEventListener("keydown", changeDirection);
 resetBtn.addEventListener("click", resetGame);
+slowBtn.addEventListener("click", slowDownSnake);
+speedBtn.addEventListener("click", speedUpSnake);
 
 gameStart();
 
@@ -44,7 +49,7 @@ function nextTick(){
             drawSnake();
             checkGameOver();
             nextTick();
-        }, 75);
+        }, tickDelay);
     }
     else{
         displayGameOver();
@@ -90,31 +95,44 @@ function drawSnake(){
     })
 };
 function changeDirection(event){
-    const keyPressed = event.keyCode;
-    const LEFT = 37;
-    const UP = 38;
-    const RIGHT = 39;
-    const DOWN = 40;
+    const keyPressed = event.code;
+    const goingUp = (yVelocity === -unitSize);
+    const goingDown = (yVelocity === unitSize);
+    const goingRight = (xVelocity === unitSize);
+    const goingLeft = (xVelocity === -unitSize);
 
-    const goingUp = (yVelocity == -unitSize);
-    const goingDown = (yVelocity == unitSize);
-    const goingRight = (xVelocity == unitSize);
-    const goingLeft = (xVelocity == -unitSize);
+    if(keyPressed === "Space"){
+        event.preventDefault();
+        resetGame();
+        return;
+    }
+    if(keyPressed === "KeyA"){
+        slowDownSnake();
+        return;
+    }
+    if(keyPressed === "KeyD"){
+        speedUpSnake();
+        return;
+    }
 
     switch(true){
-        case(keyPressed == LEFT && !goingRight):
+        case(keyPressed === "ArrowLeft" && !goingRight):
+            event.preventDefault();
             xVelocity = -unitSize;
             yVelocity = 0;
             break;
-        case(keyPressed == UP && !goingDown):
+        case(keyPressed === "ArrowUp" && !goingDown):
+            event.preventDefault();
             xVelocity = 0;
             yVelocity = -unitSize;
             break;
-        case(keyPressed == RIGHT && !goingLeft):
+        case(keyPressed === "ArrowRight" && !goingLeft):
+            event.preventDefault();
             xVelocity = unitSize;
             yVelocity = 0;
             break;
-        case(keyPressed == DOWN && !goingUp):
+        case(keyPressed === "ArrowDown" && !goingUp):
+            event.preventDefault();
             xVelocity = 0;
             yVelocity = unitSize;
             break;
@@ -148,14 +166,18 @@ function displayGameOver(){
     ctx.fillText("GAME OVER!", gameWidth / 2, gameHeight / 2);
     running = false;
 };
+function speedUpSnake(){
+    tickDelay = Math.max(minTickDelay, tickDelay - tickStep);
+}
+function slowDownSnake(){
+    tickDelay = Math.min(maxTickDelay, tickDelay + tickStep);
+}
 function resetGame(){
     score = 0;
     xVelocity = unitSize;
     yVelocity = 0;
+    tickDelay = 75;
     snake = [
-        {x:unitSize * 4, y:0},
-        {x:unitSize * 3, y:0},
-        {x:unitSize * 2, y:0},
         {x:unitSize, y:0},
         {x:0, y:0}
     ];

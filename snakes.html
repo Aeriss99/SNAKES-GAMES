@@ -9,10 +9,24 @@
 </head>
 <body>
     <div id="gameContainer">
-        <canvas id="gameBoard" width="500" height="500"></canvas>
-    <div id="scoreText">0</div>
-    <button id="resetBtn">Tolong Ulangin!</button> 
+        <div id="playArea">
+            <canvas id="gameBoard" width="650" height="650"></canvas>
+            <aside id="helpPanel">
+                <h2>Petunjuk</h2>
+                <p>Panah: gerakkan ular</p>
+                <p>A: perlambat </p>
+                <p>D: percepat </p>
+                <p>Spasi: ulangi game</p>
+            </aside>
+        </div>
+        <div id="scoreText">0</div>
+        <div id="controls">
+            <button id="slowBtn">Perlambat</button>
+            <button id="speedBtn">Percepat</button>
+            <button id="resetBtn">Tolong Ulangin!</button>
+        </div>
     </div>
+    <div id="copyrightText">Copyright Lingga Ardyansyah</div>
     <script src="snakes.js"></script>
 </body>
 </html>
