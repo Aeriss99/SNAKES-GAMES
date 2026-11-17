@@ -1,6 +1,7 @@
 const gameBoard = document.querySelector("#gameBoard"); // Ambil elemen canvas board game.
 const ctx = gameBoard.getContext("2d"); // Ambil konteks 2D untuk menggambar.
 const scoreText = document.querySelector("#scoreText"); // Ambil elemen teks skor.
+const highScoreText = document.querySelector("#highScoreText"); // Ambil elemen skor terbaik.
 const resetBtn = document.querySelector("#resetBtn"); // Ambil tombol reset.
 const slowBtn = document.querySelector("#slowBtn"); // Ambil tombol perlambat.
 const speedBtn = document.querySelector("#speedBtn"); // Ambil tombol percepat.
@@ -20,6 +21,7 @@ let yVelocity = 0; // Kecepatan awal arah Y.
 let foodX; // Posisi X makanan.
 let foodY; // Posisi Y makanan.
 let score = 0; // Skor awal.
+let highScore = loadHighScore(); // Skor terbaik yang tersimpan di browser.
 let tickDelay = 75; // Delay awal tiap tick.
 let directionQueue = []; // Antrian belokan dari keyboard, diproses satu per langkah.
 let tickTimer = null; // ID setTimeout loop game, dipakai agar reset tidak membuat loop ganda.
@@ -54,6 +56,7 @@ gameStart(); // Mulai game saat file dimuat.
 function gameStart() { // Fungsi untuk inisialisasi awal game.
     running = true; // Tandai game sedang berjalan.
     scoreText.textContent = score; // Tampilkan skor saat ini.
+    highScoreText.textContent = "Skor terbaik: " + highScore; // Tampilkan skor terbaik.
     createFood(); // Buat posisi makanan baru.
     drawFood(); // Gambar makanan pertama.
     nextTick(); // Jalankan loop game.
@@ -109,6 +112,11 @@ function moveSnake() { // Logika pergerakan ular.
     if (snake[0].x === foodX && snake[0].y === foodY) { // Jika kepala menyentuh makanan.
         score += 1; // Tambah skor.
         scoreText.textContent = score; // Update teks skor.
+        if (score > highScore) { // Rekor baru.
+            highScore = score; // Simpan rekor di memori.
+            saveHighScore(highScore); // Simpan rekor di browser.
+            highScoreText.textContent = "Skor terbaik: " + highScore; // Update tampilan rekor.
+        } // Akhir cek rekor.
         createFood(); // Buat makanan baru.
     } else { // Jika tidak makan.
         snake.pop(); // Buang ekor agar panjang tetap.
@@ -190,6 +198,21 @@ function displayGameOver() { // Tampilkan teks kalah di tengah board.
     ctx.fillText("GAME OVER!", gameWidth / 2, gameHeight / 2); // Gambar teks game over di tengah.
     running = false; // Pastikan status game berhenti.
 } // Akhir fungsi displayGameOver.
+
+function loadHighScore() { // Baca skor terbaik dari localStorage.
+    try { // localStorage bisa diblokir (mode privat / file://).
+        return parseInt(localStorage.getItem("snakesHighScore"), 10) || 0; // Default 0 kalau belum ada.
+    } catch (e) { // Kalau storage tidak tersedia.
+        return 0; // Tetap jalan tanpa menyimpan.
+    } // Akhir try.
+} // Akhir fungsi loadHighScore.
+
+function saveHighScore(value) { // Simpan skor terbaik ke localStorage.
+    try { // localStorage bisa diblokir.
+        localStorage.setItem("snakesHighScore", String(value)); // Simpan sebagai teks.
+    } catch (e) { // Abaikan kalau gagal menyimpan.
+    } // Akhir try.
+} // Akhir fungsi saveHighScore.
 
 function speedUpSnake() { // Fungsi untuk mempercepat ular.
     tickDelay = Math.max(minTickDelay, tickDelay - tickStep); // Kurangi delay tapi jangan lewat batas minimum.

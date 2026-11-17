@@ -61,6 +61,12 @@ body { /* Atur gaya dasar halaman. */
     text-align: center; /* Teks skor rata tengah. */
 } /* Akhir blok scoreText. */
 
+#highScoreText { /* Teks skor terbaik di bawah skor. */
+    font-family: "Permanent Marker", cursive; /* Font sama dengan skor. */
+    font-size: 24px; /* Lebih kecil dari skor utama. */
+    margin-bottom: 12px; /* Jarak ke tombol. */
+} /* Akhir blok highScoreText. */
+
 #controls { /* Area tombol kontrol. */
     width: min(650px, 100vw - 16px); /* Lebar kontrol mengikuti lebar board. */
     align-self: flex-start; /* Mulai dari tepi kiri area board. */
