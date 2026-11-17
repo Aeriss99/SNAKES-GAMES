@@ -69,8 +69,10 @@ function createFood() { // Buat koordinat makanan baru.
         return randNum; // Kembalikan angka acak.
     } // Akhir fungsi randomFood.
 
-    foodX = randomFood(0, gameWidth - unitSize); // Tetapkan posisi X makanan.
-    foodY = randomFood(0, gameHeight - unitSize); // Tetapkan posisi Y makanan.
+    do { // Ulangi sampai makanan tidak muncul di atas badan ular.
+        foodX = randomFood(0, gameWidth - unitSize); // Tetapkan posisi X makanan.
+        foodY = randomFood(0, gameHeight - unitSize); // Tetapkan posisi Y makanan.
+    } while (snake.some((part) => part.x === foodX && part.y === foodY)); // Cek tabrakan dengan badan ular.
 } // Akhir fungsi createFood.
 
 function drawFood() { // Gambar makanan di board.
