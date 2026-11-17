@@ -21,6 +21,7 @@ let foodX; // Posisi X makanan.
 let foodY; // Posisi Y makanan.
 let score = 0; // Skor awal.
 let tickDelay = 75; // Delay awal tiap tick.
+let tickTimer = null; // ID setTimeout loop game, dipakai agar reset tidak membuat loop ganda.
 let snake = [ // Data segmen ular.
     {x: unitSize, y: 0}, // Kepala ular awal.
     {x: 0, y: 0} // Ekor ular awal.
@@ -43,7 +44,7 @@ function gameStart() { // Fungsi untuk inisialisasi awal game.
 
 function nextTick() { // Fungsi loop utama game.
     if (running) { // Cek apakah game masih aktif.
-        setTimeout(() => { // Jalankan langkah game tiap interval.
+        tickTimer = setTimeout(() => { // Jalankan langkah game tiap interval.
             clearBoard(); // Bersihkan board sebelum redraw.
             drawFood(); // Gambar makanan.
             moveSnake(); // Gerakkan ular.
@@ -186,6 +187,7 @@ function slowDownSnake() { // Fungsi untuk memperlambat ular.
 } // Akhir fungsi slowDownSnake.
 
 function resetGame() { // Kembalikan game ke kondisi awal.
+    clearTimeout(tickTimer); // Hentikan loop lama agar tidak berjalan dobel dengan loop baru.
     score = 0; // Reset skor.
     xVelocity = unitSize; // Arah awal ke kanan.
     yVelocity = 0; // Nolkan arah Y.
