@@ -2,8 +2,13 @@
 
 Game ular sederhana pakai HTML, CSS, dan JavaScript.
 
+## Fitur
+- Kecepatan bisa diatur (tombol atau keyboard)
+- Skor terbaik tersimpan otomatis di browser
+- Bisa dimainkan di HP dengan swipe
+
 ## Kontrol
-- `Arrow` : gerak
+- `Arrow` / swipe di papan : gerak
 - `A` : perlambat
 - `D` : percepat
 - `Space` : ulangi game
