@@ -168,7 +168,7 @@ function checkGameOver() { // Cek semua kondisi game over.
 } // Akhir fungsi checkGameOver.
 
 function displayGameOver() { // Tampilkan teks kalah di tengah board.
-    ctx.font = "50px MV Boli"; // Set font teks game over.
+    ctx.font = "50px 'Permanent Marker', cursive"; // Font sama dengan UI (MV Boli hanya ada di Windows).
     ctx.fillStyle = "black"; // Set warna teks.
     ctx.textAlign = "center"; // Set alignment horizontal tengah.
     ctx.fillText("GAME OVER!", gameWidth / 2, gameHeight / 2); // Gambar teks game over di tengah.
