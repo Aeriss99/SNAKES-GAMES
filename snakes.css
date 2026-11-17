@@ -27,6 +27,7 @@ body { /* Atur gaya dasar halaman. */
     max-width: calc(100vw - 16px); /* Jangan melebihi lebar layar HP. */
     height: auto; /* Jaga rasio persegi saat diperkecil. */
     box-sizing: border-box; /* Hitung border di dalam lebar. */
+    touch-action: none; /* Swipe di papan tidak menggulir halaman. */
 } /* Akhir blok gameBoard. */
 
 #helpPanel { /* Panel petunjuk kontrol game. */
