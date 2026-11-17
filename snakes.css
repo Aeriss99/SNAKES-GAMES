@@ -24,6 +24,9 @@ body { /* Atur gaya dasar halaman. */
 
 #gameBoard { /* Canvas papan permainan. */
     border: 3px solid; /* Garis tepi board. */
+    max-width: calc(100vw - 16px); /* Jangan melebihi lebar layar HP. */
+    height: auto; /* Jaga rasio persegi saat diperkecil. */
+    box-sizing: border-box; /* Hitung border di dalam lebar. */
 } /* Akhir blok gameBoard. */
 
 #helpPanel { /* Panel petunjuk kontrol game. */
@@ -50,7 +53,7 @@ body { /* Atur gaya dasar halaman. */
 } /* Akhir blok helpPanel p. */
 
 #scoreText { /* Teks skor di bawah board. */
-    width: 650px; /* Lebar skor mengikuti lebar board. */
+    width: min(650px, 100vw - 16px); /* Lebar skor mengikuti lebar board. */
     align-self: flex-start; /* Posisikan skor mulai dari kiri area board. */
     font-family: "Permanent Marker", cursive; /* Font skor. */
     font-size: 100px; /* Ukuran angka skor besar. */
@@ -58,7 +61,7 @@ body { /* Atur gaya dasar halaman. */
 } /* Akhir blok scoreText. */
 
 #controls { /* Area tombol kontrol. */
-    width: 650px; /* Lebar kontrol mengikuti lebar board. */
+    width: min(650px, 100vw - 16px); /* Lebar kontrol mengikuti lebar board. */
     align-self: flex-start; /* Mulai dari tepi kiri area board. */
     display: flex; /* Susun tombol dalam flex. */
     justify-content: center; /* Center-kan semua tombol. */
@@ -85,6 +88,15 @@ body { /* Atur gaya dasar halaman. */
 } /* Akhir blok copyrightText. */
 
 @media (max-width: 840px) { /* Aturan untuk layar kecil. */
+    body { /* Susun konten vertikal di layar kecil. */
+        flex-direction: column; /* Copyright turun ke bawah konten. */
+    } /* Akhir blok body mobile. */
+
+    #copyrightText { /* Copyright di mobile. */
+        position: static; /* Jangan menimpa tombol di layar kecil. */
+        margin: 12px 0; /* Jarak dari tombol. */
+    } /* Akhir blok copyright mobile. */
+
     #playArea { /* Ubah layout area permainan saat mobile. */
         flex-direction: column; /* Susun board dan panel jadi vertikal. */
         align-items: center; /* Pusatkan item di layar kecil. */
