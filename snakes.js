@@ -21,6 +21,7 @@ let foodX; // Posisi X makanan.
 let foodY; // Posisi Y makanan.
 let score = 0; // Skor awal.
 let tickDelay = 75; // Delay awal tiap tick.
+let directionQueue = []; // Antrian belokan dari keyboard, diproses satu per langkah.
 let tickTimer = null; // ID setTimeout loop game, dipakai agar reset tidak membuat loop ganda.
 let snake = [ // Data segmen ular.
     {x: unitSize, y: 0}, // Kepala ular awal.
@@ -78,6 +79,11 @@ function drawFood() { // Gambar makanan di board.
 } // Akhir fungsi drawFood.
 
 function moveSnake() { // Logika pergerakan ular.
+    if (directionQueue.length > 0) { // Ambil satu belokan dari antrian per langkah.
+        const next = directionQueue.shift(); // Belokan berikutnya.
+        xVelocity = next.x; // Terapkan arah X.
+        yVelocity = next.y; // Terapkan arah Y.
+    } // Akhir ambil antrian.
     const head = {x: snake[0].x + xVelocity, y: snake[0].y + yVelocity}; // Hitung posisi kepala baru.
 
     snake.unshift(head); // Tambahkan kepala baru di depan array.
@@ -102,10 +108,11 @@ function drawSnake() { // Gambar seluruh segmen ular.
 
 function changeDirection(event) { // Handler keyboard.
     const keyPressed = event.code; // Ambil kode tombol yang ditekan.
-    const goingUp = (yVelocity === -unitSize); // Status ular sedang ke atas.
-    const goingDown = (yVelocity === unitSize); // Status ular sedang ke bawah.
-    const goingRight = (xVelocity === unitSize); // Status ular sedang ke kanan.
-    const goingLeft = (xVelocity === -unitSize); // Status ular sedang ke kiri.
+    const last = directionQueue.length > 0 ? directionQueue[directionQueue.length - 1] : {x: xVelocity, y: yVelocity}; // Arah terakhir yang akan dipakai ular.
+    const goingUp = (last.y === -unitSize); // Status ular (setelah antrian) ke atas.
+    const goingDown = (last.y === unitSize); // Status ular (setelah antrian) ke bawah.
+    const goingRight = (last.x === unitSize); // Status ular (setelah antrian) ke kanan.
+    const goingLeft = (last.x === -unitSize); // Status ular (setelah antrian) ke kiri.
 
     if (keyPressed === "Space") { // Jika tombol spasi ditekan.
         event.preventDefault(); // Cegah scroll halaman.
@@ -123,28 +130,16 @@ function changeDirection(event) { // Handler keyboard.
         return; // Hentikan proses tombol lain.
     } // Akhir if KeyD.
 
-    switch (true) { // Gunakan switch berbasis kondisi boolean.
-        case (keyPressed === "ArrowLeft" && !goingRight): // Panah kiri, selama tidak sedang ke kanan.
-            event.preventDefault(); // Cegah scroll halaman.
-            xVelocity = -unitSize; // Ubah arah X ke kiri.
-            yVelocity = 0; // Nolkan arah Y.
-            break; // Selesai kasus kiri.
-        case (keyPressed === "ArrowUp" && !goingDown): // Panah atas, selama tidak sedang ke bawah.
-            event.preventDefault(); // Cegah scroll halaman.
-            xVelocity = 0; // Nolkan arah X.
-            yVelocity = -unitSize; // Ubah arah Y ke atas.
-            break; // Selesai kasus atas.
-        case (keyPressed === "ArrowRight" && !goingLeft): // Panah kanan, selama tidak sedang ke kiri.
-            event.preventDefault(); // Cegah scroll halaman.
-            xVelocity = unitSize; // Ubah arah X ke kanan.
-            yVelocity = 0; // Nolkan arah Y.
-            break; // Selesai kasus kanan.
-        case (keyPressed === "ArrowDown" && !goingUp): // Panah bawah, selama tidak sedang ke atas.
-            event.preventDefault(); // Cegah scroll halaman.
-            xVelocity = 0; // Nolkan arah X.
-            yVelocity = unitSize; // Ubah arah Y ke bawah.
-            break; // Selesai kasus bawah.
-    } // Akhir switch arah.
+    let next = null; // Arah baru yang diminta.
+    if (keyPressed === "ArrowLeft" && !goingRight && !goingLeft) next = {x: -unitSize, y: 0}; // Kiri, tidak boleh berbalik dari kanan.
+    if (keyPressed === "ArrowUp" && !goingDown && !goingUp) next = {x: 0, y: -unitSize}; // Atas, tidak boleh berbalik dari bawah.
+    if (keyPressed === "ArrowRight" && !goingLeft && !goingRight) next = {x: unitSize, y: 0}; // Kanan, tidak boleh berbalik dari kiri.
+    if (keyPressed === "ArrowDown" && !goingUp && !goingDown) next = {x: 0, y: unitSize}; // Bawah, tidak boleh berbalik dari atas.
+
+    if (keyPressed.startsWith("Arrow")) event.preventDefault(); // Cegah scroll halaman.
+    if (next && directionQueue.length < 2) { // Batasi antrian agar kontrol tetap responsif.
+        directionQueue.push(next); // Simpan belokan untuk langkah berikutnya.
+    } // Akhir simpan belokan.
 } // Akhir fungsi changeDirection.
 
 function checkGameOver() { // Cek semua kondisi game over.
@@ -187,7 +182,8 @@ function slowDownSnake() { // Fungsi untuk memperlambat ular.
 } // Akhir fungsi slowDownSnake.
 
 function resetGame() { // Kembalikan game ke kondisi awal.
-    clearTimeout(tickTimer); // Hentikan loop lama agar tidak berjalan dobel dengan loop baru.
+    clearTimeout(tickTimer);
+    directionQueue = []; // Kosongkan antrian belokan. // Hentikan loop lama agar tidak berjalan dobel dengan loop baru.
     score = 0; // Reset skor.
     xVelocity = unitSize; // Arah awal ke kanan.
     yVelocity = 0; // Nolkan arah Y.
