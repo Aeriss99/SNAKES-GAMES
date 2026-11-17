@@ -33,6 +33,22 @@ resetBtn.addEventListener("click", resetGame); // Klik tombol reset untuk ulang 
 slowBtn.addEventListener("click", slowDownSnake); // Klik tombol perlambat.
 speedBtn.addEventListener("click", speedUpSnake); // Klik tombol percepat.
 
+let touchStartX = 0; // Posisi X awal sentuhan (untuk swipe di HP).
+let touchStartY = 0; // Posisi Y awal sentuhan.
+gameBoard.addEventListener("touchstart", (event) => { // Catat titik awal swipe.
+    touchStartX = event.changedTouches[0].clientX; // Simpan X awal.
+    touchStartY = event.changedTouches[0].clientY; // Simpan Y awal.
+}, {passive: true}); // Tidak memblokir scroll browser.
+gameBoard.addEventListener("touchend", (event) => { // Tentukan arah swipe.
+    const dx = event.changedTouches[0].clientX - touchStartX; // Jarak geser horizontal.
+    const dy = event.changedTouches[0].clientY - touchStartY; // Jarak geser vertikal.
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < 20) return; // Abaikan sentuhan yang terlalu pendek.
+    const code = Math.abs(dx) > Math.abs(dy) // Pilih sumbu dengan geseran terbesar.
+        ? (dx > 0 ? "ArrowRight" : "ArrowLeft") // Swipe horizontal.
+        : (dy > 0 ? "ArrowDown" : "ArrowUp"); // Swipe vertikal.
+    changeDirection({code, preventDefault() {}}); // Pakai logika yang sama dengan keyboard.
+}); // Akhir handler swipe.
+
 gameStart(); // Mulai game saat file dimuat.
 
 function gameStart() { // Fungsi untuk inisialisasi awal game.
